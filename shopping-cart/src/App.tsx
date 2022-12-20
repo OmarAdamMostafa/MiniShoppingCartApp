@@ -5,7 +5,7 @@ import Item from './Item/Item'
 import { Drawer, LinearProgress, Grid, Badge } from '@mui/material';
 import { AddShoppingCart } from '@mui/icons-material';
 
-import { Container } from './App.styles';
+import { Container, StyledButton } from './App.styles';
 
 export type CartItemType = {
   id: number;
@@ -22,9 +22,11 @@ const getProducts = async(): Promise<CartItemType[]> => await(await fetch('https
 
 
 const App = () => {
+  const [cartOpen, setCartOpen] = useState(false)
+  const [cartItems, setCartItems] = useState([] as CartItemType[]) // const [cartItem, setCartItem] = useState<CartItemType[]>([]) works as well
   const {data, isLoading, isError} = useQuery<CartItemType[]>('products', getProducts)
 
-  const getTotalItems = () => null;
+  const getTotalItems = (cartItems: CartItemType[]) => cartItems.reduce((total:number, item) => total + item.amount, 0);
   
   const handleAddtoCart = (clickedItem: CartItemType) => null;
 
@@ -40,6 +42,14 @@ const App = () => {
 
   return (
     <Container>
+      <Drawer anchor='right' open={cartOpen} onClose={()=>setCartOpen(false)}>
+        Cart
+      </Drawer>
+      <StyledButton onClick={()=>setCartOpen(true)}>
+        <Badge badgeContent={getTotalItems(cartItems)} color='error'>
+          <AddShoppingCart/>
+        </Badge>
+      </StyledButton>
       <Grid container spacing={3}>
         {
           data?.map(item=>(
