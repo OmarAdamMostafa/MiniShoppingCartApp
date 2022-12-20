@@ -27,9 +27,40 @@ const App = () => {
 
   const getTotalItems = (cartItems: CartItemType[]) => cartItems.reduce((total:number, item) => total + item.amount, 0);
   
-  const handleAddtoCart = (clickedItem: CartItemType) => null;
+  const handleAddtoCart = (clickedItem: CartItemType) => {
+    //Since we use the setters, We can access the previous state through 'prev'
+    setCartItems(prev => {
+      //Checks whether item is already in the cart
+      const isItemInCart = prev.find(item => item.id === clickedItem.id)
 
-  const handleRemoveFromCart = () => null;
+      if(isItemInCart){
+        return prev.map(item=>(
+          item.id === clickedItem.id 
+            ? {...item, amount: item.amount + 1} 
+            : item
+        ))
+      }
+
+      //First time item is added to the cart
+      return [...prev, {...clickedItem, amount: 1}]
+    })
+  };
+
+  const handleRemoveFromCart = (id: number) => {
+    setCartItems(prev => 
+      prev.reduce((ack, item) =>{
+        if(item.id === id){
+          if(item.amount === 1){
+            return ack;
+          }
+          return [...ack, {...item, amount: item.amount - 1}]
+        }
+        else{
+          return [...ack, item]
+        }
+      }, [] as CartItemType[]) 
+    );
+  };
 
   if(isLoading){
     return <LinearProgress/>
