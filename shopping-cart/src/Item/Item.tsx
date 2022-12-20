@@ -1,7 +1,5 @@
 import { Button } from "@mui/material";
-
 import { CartItemType } from "../App";
-
 import { Container } from "./Item.styles";
 
 type Props = {

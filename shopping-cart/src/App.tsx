@@ -1,10 +1,9 @@
 import React, {useState} from 'react';
-import {useQuery} from 'react-query'
-
-import Item from './Item/Item'
+import {useQuery} from 'react-query';
+import Item from './Item/Item';
+import Cart from './Cart/Cart';
 import { Drawer, LinearProgress, Grid, Badge } from '@mui/material';
 import { AddShoppingCart } from '@mui/icons-material';
-
 import { Container, StyledButton } from './App.styles';
 
 export type CartItemType = {
@@ -30,7 +29,7 @@ const App = () => {
   
   const handleAddtoCart = (clickedItem: CartItemType) => null;
 
-  const handleRemovetoCart = () => null;
+  const handleRemoveFromCart = () => null;
 
   if(isLoading){
     return <LinearProgress/>
@@ -43,7 +42,11 @@ const App = () => {
   return (
     <Container>
       <Drawer anchor='right' open={cartOpen} onClose={()=>setCartOpen(false)}>
-        Cart
+        <Cart 
+          cartItems={cartItems} 
+          addToCart={handleAddtoCart} 
+          removeFromCart={handleRemoveFromCart}
+        />
       </Drawer>
       <StyledButton onClick={()=>setCartOpen(true)}>
         <Badge badgeContent={getTotalItems(cartItems)} color='error'>
